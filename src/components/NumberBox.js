@@ -8,6 +8,13 @@ const NumberBox = () => {
   const [pickedNumber, setPickedNumber] = useState(null);
   const [isPickingNumber, setIsPickingNumber] = useState(false);
   const [displayNumber, setDisplayNumber] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const isMobileDevice = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+  };
 
   const pickNumber = () => {
     setIsPickingNumber(true);
@@ -30,17 +37,30 @@ const NumberBox = () => {
   };
 
   useEffect(() => {
-    const handleKeyPress = () => {
+    const stopConfetti = () => {
       setPickedNumber(null); // Stop the confetti
     };
-    window.addEventListener("keydown", handleKeyPress);
+
+    if (isMobile) {
+      // Listen for tap events on mobile
+      window.addEventListener("touchstart", stopConfetti);
+    } else {
+      // Listen for keydown events on desktop
+      window.addEventListener("keydown", stopConfetti);
+    }
+
     return () => {
-      window.removeEventListener("keydown", handleKeyPress);
+      if (isMobile) {
+        window.removeEventListener("touchstart", stopConfetti);
+      } else {
+        window.removeEventListener("keydown", stopConfetti);
+      }
     };
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
     if (pickedNumber !== null) {
+      setIsMobile(isMobileDevice());
       const confettiTimer = setTimeout(() => {
         setPickedNumber(null);
       }, 50000); // Confetti lasts for 5 seconds

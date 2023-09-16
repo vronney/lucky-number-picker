@@ -14,7 +14,7 @@ const NumberPickerApp = () => {
           justifyContent: "center",
           height: "100vh",
           width: { lg: "100%", md: "75%", xs: "100%" },
-          margin: "10px auto",
+          margin: "0px auto",
           padding: "10px",
         }}
       >
